@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
+use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller
 {
@@ -33,10 +34,22 @@ class PostController extends Controller
     }
 
     /**
+     * Edit the specified resource.
+     */
+    public function edit(Post $post)
+    {
+        Gate::authorize('update', $post);
+
+        return $post->load('user:id,name');
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
+        Gate::authorize('update', $post);
+
         return $post->update($request->validated());
     }
 
@@ -45,6 +58,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        Gate::authorize('delete', $post);
+
+        $post->delete();
+
+        return response()->noContent();
     }
 }
