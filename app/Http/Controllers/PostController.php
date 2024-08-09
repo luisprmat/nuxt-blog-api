@@ -37,7 +37,7 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        return $post->update($request->validated());
     }
 
     /**
